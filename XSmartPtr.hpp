@@ -6,7 +6,18 @@
 #include "typeinfo.h"
 #include "winbase.h"
 
-using namespace std;
+#undef DISALLOW_COPY_AND_ASSIGN
+#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
+		ClassName(const ClassName&); \
+		ClassName& operator =(const ClassName&)
+
+#undef FREE_POINTER
+#define FREE_POINTER(p) \
+		if (p) { delete p; p = NULL; }
+
+#undef FREE_ARRAY
+#define FREE_ARRAY(p) \
+		if (p) { delete [] p; p = NULL; }
 
 namespace XSMARTPTR
 {
@@ -30,14 +41,14 @@ namespace XSMARTPTR
 		}
 
 	public:
-		// ÖØĞÂ°ó¶¨Ò»¸öÂãÖ¸Õë£¬Ö®Ç°ÍĞ¹ÜµÄÂãÖ¸Õë»á±»ÊÍ·Å
+		// é‡æ–°ç»‘å®šä¸€ä¸ªè£¸æŒ‡é’ˆï¼Œä¹‹å‰æ‰˜ç®¡çš„è£¸æŒ‡é’ˆä¼šè¢«é‡Šæ”¾
 		void Reset(T* pObj)    
 		{
 			assert(pObj == NULL || pObj != m_pObj);
 			ThisType(pObj).Swap(*this);
 		}
 
-		// ½»»»Á½¸öXScopePtr¶ÔÏóÍĞ¹ÜµÄÖ¸Õë
+		// äº¤æ¢ä¸¤ä¸ªXScopePtrå¯¹è±¡æ‰˜ç®¡çš„æŒ‡é’ˆ
 		void Swap(XScopePtr& that)    
 		{
 			T* pTemp = that.m_pObj;
@@ -45,27 +56,27 @@ namespace XSMARTPTR
 			this->m_pObj = pTemp;
 		}
 
-		// Ö§³Ö½âÒıÓÃ
+		// æ”¯æŒè§£å¼•ç”¨
 		T& operator *()    
 		{
 			assert(m_pObj != NULL);
 			return *m_pObj;
 		}
 
-		// Ê¹Ö®¿´ÆğÀ´ºÍÂãÖ¸ÕëĞĞÎª²î²»¶à¡£
+		// ä½¿ä¹‹çœ‹èµ·æ¥å’Œè£¸æŒ‡é’ˆè¡Œä¸ºå·®ä¸å¤šã€‚
 		T* operator ->()    
 		{
 			assert(m_pObj != NULL);
 			return m_pObj;
 		}
 
-		// »ñµÃÂãÖ¸Õë¡£ÓÃ»§Èç¹ûÊÍ·ÅÂãÖ¸Õë£¬»áµ¼ÖÂDoubleFree¡£
+		// è·å¾—è£¸æŒ‡é’ˆã€‚ç”¨æˆ·å¦‚æœé‡Šæ”¾è£¸æŒ‡é’ˆï¼Œä¼šå¯¼è‡´DoubleFreeã€‚
 		T* Get() const                 
 		{
 			return m_pObj;
 		}
 		
-		// Ö§³ÖÏòboolÀàĞÍÒşÊ½×ª»»¡£ËùÒÔ£ºXScopePtr a(new T); if (a){...} ÊÇºÏ·¨µÄ¡£
+		// æ”¯æŒå‘boolç±»å‹éšå¼è½¬æ¢ã€‚æ‰€ä»¥ï¼šXScopePtr a(new T); if (a){...} æ˜¯åˆæ³•çš„ã€‚
 		operator bool()    
 		{
 			return m_pObj != NULL;
@@ -73,10 +84,7 @@ namespace XSMARTPTR
 
 	private:
 		typedef XScopePtr<T> ThisType;
-		XScopePtr(const XScopePtr& that);
-		XScopePtr& operator =(const XScopePtr& that);
-		bool operator ==(const XScopePtr& that);
-		bool operator !=(const XScopePtr& that);
+		DISALLOW_COPY_AND_ASSIGN(ThisType);
 
 	private:
 		T* m_pObj;
@@ -103,13 +111,13 @@ namespace XSMARTPTR
 		}
 
 	public:
-		// »ñµÃÂãÖ¸Õë
+		// è·å¾—è£¸æŒ‡é’ˆ
 		T* Get() const    
 		{
 			return m_pArray;
 		}
 
-		// ½»»»ÍĞ¹ÜµÄÂãÖ¸Õë
+		// äº¤æ¢æ‰˜ç®¡çš„è£¸æŒ‡é’ˆ
 		void Swap(XScopeArray& that)    
 		{
 			T* pTemp = that.m_pArray;
@@ -117,21 +125,21 @@ namespace XSMARTPTR
 			this->m_pArray = pTemp;
 		}
 
-		// ÖØĞÂ°ó¶¨ÂãÖ¸Õë£¬Ö®Ç°µÄ»á±»Ïú»Ù
+		// é‡æ–°ç»‘å®šè£¸æŒ‡é’ˆï¼Œä¹‹å‰çš„ä¼šè¢«é”€æ¯
 		void Reset(T* pArray)    
 		{
 			assert(pArray == NULL || pArray != m_pArray);
 			ThisType(pArray).Swap(*this);
 		}
 
-		// Ö§³ÖÏÂ±ê²Ù×÷·û
+		// æ”¯æŒä¸‹æ ‡æ“ä½œç¬¦
 		T& operator [](ptrdiff_t i) const    
 		{
 			assert(i >= 0 && m_pArray != NULL);
 			return m_pArray[i];
 		}
 
-		// Ö§³ÖÏòboolÀàĞÍÒşÊ½×ª»»
+		// æ”¯æŒå‘boolç±»å‹éšå¼è½¬æ¢
 		operator bool() const    
 		{
 			return m_pArray != NULL;
@@ -139,10 +147,7 @@ namespace XSMARTPTR
 
 	private:
 		typedef XScopeArray<T> ThisType;
-		XScopeArray(const XScopeArray& that);
-		XScopeArray& operator =(const XScopeArray& that);
-		bool operator ==(const XScopeArray& that);
-		bool operator !=(const XScopeArray& that);
+		DISALLOW_COPY_AND_ASSIGN(ThisType);
 
 	private:
 		T* m_pArray;
@@ -233,7 +238,7 @@ namespace XSMARTPTR
 	class XSharedPtr
 	{
 	public:
-		// ÎŞ²Î¹¹Ôì
+		// æ— å‚æ„é€ 
 		XSharedPtr()
 			:m_pObj(NULL)
 		{
@@ -248,14 +253,14 @@ namespace XSMARTPTR
 			m_pObj = pTemp;
 		}
 
-		// ½ûÖ¹ÓÉT* ÒşÊ½×ª»»ÎªXSharedPtr<T>
+		// ç¦æ­¢ç”±T* éšå¼è½¬æ¢ä¸ºXSharedPtr<T>
 		explicit XSharedPtr(T* pObj)
 			:m_pObj(pObj)
 		{
 
 		}
 
-		// ²»Í¬ÀàĞÍµÄ¿½±´¹¹Ôì
+		// ä¸åŒç±»å‹çš„æ‹·è´æ„é€ 
 		template <class Y>
 		XSharedPtr(const XSharedPtr<Y>& that)
 			:m_counter(that.GetCounter())
@@ -265,7 +270,7 @@ namespace XSMARTPTR
 			m_pObj = pTemp;
 		}
 
-		// ¿½±´¹¹Ôì
+		// æ‹·è´æ„é€ 
 		XSharedPtr(const XSharedPtr& that)
 			:m_counter(that.m_counter)
 			,m_pObj(that.m_pObj)
@@ -273,7 +278,7 @@ namespace XSMARTPTR
 			
 		}
 
-		// ²»Í¬ÀàĞÍµÄ¿½±´¸³Öµ
+		// ä¸åŒç±»å‹çš„æ‹·è´èµ‹å€¼
 		template <class Y>
 		XSharedPtr<T>& operator =(const XSharedPtr<Y>& that)
 		{
@@ -292,7 +297,7 @@ namespace XSMARTPTR
 			return *this;
 		}
 
-		// ¿½±´¸³Öµ
+		// æ‹·è´èµ‹å€¼
 		XSharedPtr& operator =(const XSharedPtr& that)
 		{
 			if (this == &that)
@@ -312,7 +317,7 @@ namespace XSMARTPTR
 			return *this;
 		}
 
-		// Îö¹¹
+		// ææ„
 		~XSharedPtr()
 		{
 			if (m_counter.IsOnly())
@@ -324,38 +329,38 @@ namespace XSMARTPTR
 			}
 		}
 
-		// Ê¹Ö®ÓÃÆğÀ´ºÍÂãÖ¸Õë²î²»¶à
+		// ä½¿ä¹‹ç”¨èµ·æ¥å’Œè£¸æŒ‡é’ˆå·®ä¸å¤š
 		T& operator *()
 		{
 			return *m_pObj;
 		}
 
-        // operator* const°æ±¾
+        // operator* constç‰ˆæœ¬
 		T& operator *() const
 		{
 			return *m_pObj;
 		}
 
-		// Ê¹Ö®ÓÃÆğÀ´ºÍÂãÖ¸Õë²î²»¶à
+		// ä½¿ä¹‹ç”¨èµ·æ¥å’Œè£¸æŒ‡é’ˆå·®ä¸å¤š
 		T* operator ->()
 		{
 			return m_pObj;
 		}
 
-		// operator-> const°æ±¾
+		// operator-> constç‰ˆæœ¬
 		T* operator ->() const
 		{
 			return m_pObj;
 		}
 
 	public:
-		// »ñµÃÂãÖ¸Õë
+		// è·å¾—è£¸æŒ‡é’ˆ
 		T* Get() const
 		{
 			return m_pObj;
 		}
 
-		// ÍĞ¹ÜÒ»¸öĞÂµÄ²»Í¬ÀàĞÍµÄÂãÖ¸Õë
+		// æ‰˜ç®¡ä¸€ä¸ªæ–°çš„ä¸åŒç±»å‹çš„è£¸æŒ‡é’ˆ
 		template <class Y>
 		void Reset(Y* pObj)
 		{
@@ -364,7 +369,7 @@ namespace XSMARTPTR
 			Reset(pTemp);
 		}
 
-		// ÍĞ¹ÜÒ»¸öĞÂµÄÂãÖ¸Õë
+		// æ‰˜ç®¡ä¸€ä¸ªæ–°çš„è£¸æŒ‡é’ˆ
 		void Reset(T* pObj)
 		{
 			XSharedCount sharedCount;
@@ -378,32 +383,32 @@ namespace XSMARTPTR
 			m_pObj = pObj;
 		}
 
-		// Ã»Ê²Ã´ÓÃ£¬½ö½öÎªÁË½â¾ö±àÒëÎÊÌâ
+		// æ²¡ä»€ä¹ˆç”¨ï¼Œä»…ä»…ä¸ºäº†è§£å†³ç¼–è¯‘é—®é¢˜
 		const XSharedCount& GetCounter() const
 		{
 			return m_counter;
 		}
 
-		// ÏòboolÒşÊ½×ª»»
+		// å‘booléšå¼è½¬æ¢
 		operator bool()
 		{
 			return m_pObj != NULL;
 		}
 
-		// Ğ¡ÓÚ
+		// å°äº
 		template <class Y>
 		bool operator <(const XSharedPtr<Y>& that)
 		{
 			return m_pObj < that.m_pObj;
 		}
 
-		// µÈÓÚ
+		// ç­‰äº
 		bool operator ==(const XSharedPtr& that)
 		{
 			return m_pObj == that.m_pObj;
 		}
 
-		// ²»µÈÓÚ
+		// ä¸ç­‰äº
 		bool operator !=(const XSharedPtr& that)
 		{
 			return m_pObj != that.m_pObj;
@@ -452,6 +457,8 @@ bool operator <(const XSMARTPTR::XSharedPtr<T>& lh, const XSMARTPTR::XSharedPtr<
 	return lh.Get() < rh.Get();
 }
 
-
+#undef DISALLOW_COPY_AND_ASSIGN
+#undef FREE_POINTER
+#undef FREE_ARRAY
 
 #endif // XSMARTPTR_H
