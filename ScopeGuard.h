@@ -237,7 +237,7 @@ inline ScopeGuard3<Func, P1, P2, P3> MakeGuard(Func func, P1 p1, P2 p2, P3 p3)
 
 // RefHolder
 // some function or functor need a reference param
-// refrence param wraper
+// reference param wraper
 template <class T>
 class RefHolder
 {
