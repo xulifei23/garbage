@@ -18,7 +18,8 @@ public:
     typedef enum COMPRESS_PATTERN
     {
         ZLIB,
-        LZMA
+        LZMA,
+        SNAPPY
     }PATTERN;
 
 public:
@@ -60,6 +61,12 @@ private:
 
     // lzma uncomp
     bool uncompress_lzma(void* src, unsigned long srcLen, void* dest, unsigned long& destLen);
+
+    // Snappy comp
+    bool compress_snappy(void* src, unsigned long srcLen, void* dest, unsigned long& destLen);
+
+    // Snappy uncomp
+    bool uncompress_snappy(void* src, unsigned long srcLen, void* dest, unsigned long& destLen);
 
 protected:
 
