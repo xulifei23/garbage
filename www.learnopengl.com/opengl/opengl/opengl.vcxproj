@@ -69,8 +69,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\sdks\GLFW\include;E:\sdks\GLAD\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\sdks\GLFW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\sdks\GLFW\include;..\..\sdks\GLAD\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\sdks\GLFW\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -122,7 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\sdks\GLAD\src\glad.c" />
+    <ClCompile Include="..\..\sdks\GLAD\src\glad.c" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />

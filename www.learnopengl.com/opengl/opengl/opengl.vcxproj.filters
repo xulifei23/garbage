@@ -21,10 +21,10 @@
     <ClCompile Include="global.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\sdks\GLAD\src\glad.c">
+    <ClCompile Include="shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
+    <ClCompile Include="..\..\sdks\GLAD\src\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

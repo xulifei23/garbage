@@ -1,22 +1,5 @@
-﻿生成启动时间为 2017/12/21 13:45:26。
-     1>项目“E:\MyProject\opengl\opengl\opengl\opengl.vcxproj”在节点 2 上(Build 个目标)。
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\..\sdks\GLAD\src\glad.c
-         glad.c
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt global.cpp main.cpp shader.cpp
-         shader.cpp
-         main.cpp
-         正在生成代码...
-         正在跳过...(未检测到相关更改)
-         global.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\MyProject\opengl\opengl\Debug\opengl.exe" /INCREMENTAL /NOLOGO glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"E:\MyProject\opengl\opengl\Debug\opengl.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\MyProject\opengl\opengl\Debug\opengl.lib" /MACHINE:X86 Debug\glad.obj
-         Debug\global.obj
-         Debug\main.obj
-         Debug\shader.obj
-         opengl.vcxproj -> E:\MyProject\opengl\opengl\Debug\opengl.exe
-     1>已完成生成项目“E:\MyProject\opengl\opengl\opengl\opengl.vcxproj”(Build 个目标)的操作。
+﻿生成启动时间为 2017/12/21 14:09:55。
 
 已成功生成。
 
-已用时间 00:00:02.86
+已用时间 00:00:00.03
