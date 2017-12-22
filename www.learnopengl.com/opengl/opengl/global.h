@@ -10,6 +10,6 @@ GLFWwindow* CreateWnd(int width, int height);
 bool InitGLAD();
 void ProcessInput(GLFWwindow* window);
 
-#define FLTRGB(x) (float)x / 255
+#define FLTRGB(x) ((float)x / 255)
 
 #endif // GLOBAL_H

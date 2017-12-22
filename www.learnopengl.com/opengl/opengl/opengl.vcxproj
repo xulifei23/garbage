@@ -69,7 +69,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\sdks\GLFW\include;..\..\sdks\GLAD\include;..\..\sdks\stb-image;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\sdks\GLFW\include;..\..\sdks\GLAD\include;..\..\sdks\stb-image;..\..\sdks\glm\glm;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\sdks\GLFW\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
