@@ -4,9 +4,10 @@
 #include <string>
 
 struct GLFWwindow;
+struct GLFWmonitor;
 
 bool InitOpenGL(int vmarjor, int vminor);
-GLFWwindow* CreateWnd(int width, int height);
+GLFWwindow* CreateWnd(int width, int height, GLFWmonitor* pm);
 bool InitGLAD();
 void ProcessInput(GLFWwindow* window);
 

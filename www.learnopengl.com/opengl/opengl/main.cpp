@@ -17,7 +17,17 @@ int main()
 		return -1;
 	}
 
-	GLFWwindow* window = CreateWnd(800, 600);
+	int screenWid = 0, screenHei = 0;
+	int monitorCount = 0;
+	GLFWmonitor** pm = glfwGetMonitors(&monitorCount);
+	for (int i = 0; i < monitorCount; ++i)
+	{
+		const GLFWvidmode* pv = glfwGetVideoMode(pm[i]);
+		screenWid = pv->width > screenWid ? pv->width : screenWid;
+		screenHei = pv->height > screenHei ? pv->height : screenHei;
+	}
+
+	GLFWwindow* window = CreateWnd(screenWid, screenHei, pm[0]);
 	if (window == nullptr)
 	{
 		glfwTerminate();
@@ -30,6 +40,7 @@ int main()
 		return -1;
 	}
 
+	glViewport(0, 0, screenWid, screenHei);
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) 
 	{
 		glViewport(0, 0, w, h);
@@ -135,12 +146,23 @@ int main()
 		shader.use();
 		// view matrix
 		glm::mat4 view;
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+		glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 camTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 camDirect = glm::normalize(camPos - camTarget);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 camRight = glm::normalize(glm::cross(up, camDirect));
+		glm::vec3 camUp = glm::cross(camDirect, camRight);
+		float radius = 10.0f;
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
+		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), camTarget, up);
+
 		unsigned int viewLoc = glGetUniformLocation(shader.id, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		// projection matrix
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(45.0f), (float)screenWid / screenHei, 0.1f, 100.0f);
 		unsigned int projectionLoc = glGetUniformLocation(shader.id, "projection");
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 

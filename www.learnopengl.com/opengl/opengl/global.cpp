@@ -18,9 +18,9 @@ bool InitOpenGL(int vmarjor, int vminor)
 	return true;
 }
 
-GLFWwindow* CreateWnd(int width, int height)
+GLFWwindow* CreateWnd(int width, int height,GLFWmonitor* pm)
 {
-	GLFWwindow* window = glfwCreateWindow(width, height, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, "LearnOpenGL", pm, nullptr);
 	if (window == nullptr)
 	{
 		cout << "create window failed." << endl;
