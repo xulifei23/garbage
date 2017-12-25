@@ -7,6 +7,7 @@
 #include "global.h"
 #include "shader.h"
 #include "stb_image.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -17,7 +18,6 @@ int main()
 		return -1;
 	}
 
-	int screenWid = 0, screenHei = 0;
 	int monitorCount = 0;
 	GLFWmonitor** pm = glfwGetMonitors(&monitorCount);
 	for (int i = 0; i < monitorCount; ++i)
@@ -27,7 +27,12 @@ int main()
 		screenHei = pv->height > screenHei ? pv->height : screenHei;
 	}
 
-	GLFWwindow* window = CreateWnd(screenWid, screenHei, pm[0]);
+// 	screenWid = 800;
+// 	screenHei = 600;
+
+	lastX = (float)screenWid / 2;
+	lastY = (float)screenHei / 2;
+	GLFWwindow* window = CreateWnd(screenWid, screenHei, nullptr/*pm[0]*/);
 	if (window == nullptr)
 	{
 		glfwTerminate();
@@ -45,6 +50,8 @@ int main()
 	{
 		glViewport(0, 0, w, h);
 	});
+
+	glfwSetCursorPosCallback(window, CursorPosCallback);
 
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -91,7 +98,7 @@ int main()
 	};
 
 	int width = 0, height = 0, nrChannels = 0;
-	unsigned char* data = stbi_load("../textures/container.jpg", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("../textures/wood.jpg", &width, &height, &nrChannels, 0);
 	unsigned int texture = 0;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -135,9 +142,15 @@ int main()
 
 	Shader shader("../shaders/shader.vs", "../shaders/shader.fg");	
 	glEnable(GL_DEPTH_TEST);
-
+	float lastFrame = glfwGetTime();
+	printVec(cam.m_cameraPos);
+	printVec(cam.m_cameraTarget);
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentTime = glfwGetTime();
+		deltaTime = currentTime - lastFrame;
+		lastFrame = currentTime;
+
 		ProcessInput(window);
 
 		glClearColor(FLTRGB(15), FLTRGB(37), FLTRGB(64), 1.0f);
@@ -146,28 +159,14 @@ int main()
 		shader.use();
 		// view matrix
 		glm::mat4 view;
-
-		glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		glm::vec3 camTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 camDirect = glm::normalize(camPos - camTarget);
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 camRight = glm::normalize(glm::cross(up, camDirect));
-		glm::vec3 camUp = glm::cross(camDirect, camRight);
-		float radius = 10.0f;
-		float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
-		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), camTarget, up);
-
-		unsigned int viewLoc = glGetUniformLocation(shader.id, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		view = cam.ViewMatrix();
+		shader.setMat4("view", view);
 		// projection matrix
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), (float)screenWid / screenHei, 0.1f, 100.0f);
-		unsigned int projectionLoc = glGetUniformLocation(shader.id, "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		shader.setMat4("projection", projection);
 
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// model matrix
 		for (unsigned int i = 0; i < 10; ++i)

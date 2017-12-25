@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\sdks\GLAD\src\glad.c" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sdks\stb-image\stb_image.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="shader.h" />
   </ItemGroup>
