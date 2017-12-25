@@ -97,20 +97,26 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	int width = 0, height = 0, nrChannels = 0;
-	unsigned char* data = stbi_load("../textures/wood.jpg", &width, &height, &nrChannels, 0);
-	unsigned int texture = 0;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	stbi_image_free(data);
+	glm::vec3 cubePositions[] = 
+	{
+		glm::vec3(0.0f, 0.0f, 0.0f), 
+		glm::vec3(1.0f, 0.0f, 3.0f)
+	};
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+// 	int width = 0, height = 0, nrChannels = 0;
+// 	unsigned char* data = stbi_load("../textures/wood.jpg", &width, &height, &nrChannels, 0);
+// 	unsigned int texture = 0;
+// 	glGenTextures(1, &texture);
+// 	glBindTexture(GL_TEXTURE_2D, texture);
+// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+// 	glGenerateMipmap(GL_TEXTURE_2D);
+// 	stbi_image_free(data);
+// 
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	unsigned int VAO = 0;
 	glGenVertexArrays(1, &VAO);
@@ -127,24 +133,10 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-
 	Shader shader("../shaders/shader.vs", "../shaders/shader.fg");	
 	glEnable(GL_DEPTH_TEST);
 	float lastFrame = glfwGetTime();
-	printVec(cam.m_cameraPos);
-	printVec(cam.m_cameraTarget);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentTime = glfwGetTime();
@@ -155,6 +147,7 @@ int main()
 
 		glClearColor(FLTRGB(15), FLTRGB(37), FLTRGB(64), 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindVertexArray(VAO);
 
 		shader.use();
 		// view matrix
@@ -166,15 +159,14 @@ int main()
 		projection = glm::perspective(glm::radians(45.0f), (float)screenWid / screenHei, 0.1f, 100.0f);
 		shader.setMat4("projection", projection);
 
-		glBindVertexArray(VAO);
+		shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		shader.setVec3("cubeColor", glm::vec3(1.0f, 0.5f, 0.31f));
 
 		// model matrix
-		for (unsigned int i = 0; i < 10; ++i)
+		for (unsigned int i = 0; i < 2; ++i)
 		{
 			glm::mat4 model;
 			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * (i + 1);
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			shader.setMat4("model", model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -182,6 +174,8 @@ int main()
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		glBindVertexArray(0);
 	}
 
 	glDeleteVertexArrays(1, &VAO);
