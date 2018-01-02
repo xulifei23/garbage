@@ -14,6 +14,7 @@ bool InitGLAD();
 void ProcessInput(GLFWwindow* window);
 void CursorPosCallback(GLFWwindow* wnd, double posx, double posy);
 void printVec(glm::vec3 vec);
+unsigned int loadTexture(const char* path);
 
 #define FLTRGB(x) ((float)x / 255)
 

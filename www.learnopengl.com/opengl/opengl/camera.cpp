@@ -12,11 +12,6 @@ Camera::Camera(glm::vec3 cameraPos /* = glm::vec3(0.0f, 0.0f, 3.0f) */, glm::vec
 	m_cameraUp = glm::normalize(glm::cross(m_cameraRight, m_cameraTarget));
 }
 
-Camera::~Camera()
-{
-
-}
-
 glm::mat4 Camera::ViewMatrix()
 {
 	return glm::lookAt(m_cameraPos, m_cameraPos + m_cameraTarget, m_cameraUp);

@@ -15,7 +15,7 @@ class Camera
 {
 public:
 	Camera(glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f));
-	~Camera();
+	~Camera() = default;
 
 	glm::mat4 ViewMatrix();
 	void ProcessKeyboard(CameraMovement movement, float deltaTime);
