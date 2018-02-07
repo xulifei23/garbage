@@ -21,6 +21,7 @@ public:
 	void ProcessKeyboard(CameraMovement movement, float deltaTime);
 	void ProcessMouse(float xOffset, float yOffset, bool constrainPitch = true);
 	void UpdateCameraVector();
+	void ProcessMouseScroll(float yoffset);
 
 public:
 	glm::vec3 m_cameraPos;
@@ -29,9 +30,10 @@ public:
 	glm::vec3 m_cameraUp;
 	float m_yaw;
 	float m_pitch;
-	const float m_moveSpeed = 2.5f;
+	const float m_moveSpeed = 3.0f;
 	const float m_mouseSensitivity = 0.1f;
 	const glm::vec3 m_upWorld = glm::vec3(0.0f, 1.0f, 0.0f);
+	float m_Zoom;
 };
 
 #endif // CAMERA_H

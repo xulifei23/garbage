@@ -7,6 +7,7 @@ Camera::Camera(glm::vec3 cameraPos /* = glm::vec3(0.0f, 0.0f, 3.0f) */, glm::vec
 	,m_cameraTarget(cameraTarget)
 	,m_yaw(-90.0f)
 	,m_pitch(0.0f)
+	,m_Zoom(45.0f)
 {
 	m_cameraRight = glm::normalize(glm::cross(m_cameraTarget, m_upWorld));
 	m_cameraUp = glm::normalize(glm::cross(m_cameraRight, m_cameraTarget));
@@ -74,3 +75,22 @@ void Camera::UpdateCameraVector()
 	m_cameraRight = glm::normalize(glm::cross(m_cameraTarget, m_upWorld));
 	m_cameraUp = glm::normalize(glm::cross(m_cameraRight, m_cameraTarget));
 }
+
+void Camera::ProcessMouseScroll(float yoffset)
+{
+	if (m_Zoom >= 1.0f && m_Zoom <= 45.0f)
+	{
+		m_Zoom -= yoffset;
+	}
+
+	if (m_Zoom <= 1.0f)
+	{
+		m_Zoom = 1.0f;
+	}
+
+	if (m_Zoom >= 45.0f)
+	{
+		m_Zoom = 45.0f;
+	}
+}
+

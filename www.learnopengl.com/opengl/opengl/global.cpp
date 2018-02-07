@@ -14,6 +14,7 @@ float lastX = 0.0f;
 float lastY = 0.0f;
 
 extern float deltaTime = 0.0f;
+extern float lastFrame = 0.0f;
 Camera cam(glm::vec3(0.0f, 0.0f, 3.0f));
 
 bool InitOpenGL(int vmarjor, int vminor)
@@ -147,3 +148,7 @@ unsigned int loadTexture(const char* path)
 	return textureId;
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	cam.ProcessMouseScroll(yoffset);
+}
